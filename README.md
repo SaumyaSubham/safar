@@ -4,11 +4,7 @@
 
 Whether you're a solo explorer, a spiritual seeker, or a group adventurer — **SaFar** crafts your journey with context-aware storytelling using powerful LLMs.
 
----
-
-## The Deployed Link: 
-
-
+## The Deployed Link: https://safar-ai-itinerarymaker.streamlit.app/
 
 ---
 ## ✨ Features
