@@ -2,7 +2,7 @@ from langchain.prompts import PromptTemplate
 
 def get_prompt_template():
     return PromptTemplate(
-        input_variables=["home_location", "destination", "places_to_visit", "return_via", "budget", "travel_mode"],
+        input_variables=["home_location", "destination", "places_to_visit", "return_via", "budget", "travel_mode", "stay_days"],
         template="""
 You are an expert travel planner and guide. 
 Generate a day-wise detailed travel itinerary from {home_location} to {destination}, covering:
@@ -10,6 +10,7 @@ Generate a day-wise detailed travel itinerary from {home_location} to {destinati
 - Returning via {return_via}
 - Consider budget: ₹{budget}
 - Travel preference: {travel_mode}
+- The user wants to spend {stay_days} days at the destination (excluding travel time)
 
 🎯 Format:
 - Use engaging storytelling (second person)
