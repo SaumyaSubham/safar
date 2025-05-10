@@ -24,6 +24,7 @@ st.markdown("### 📌 Let's Plan Your Travel Itinerary")
 home_location = st.text_input("🏠 Where are you starting from?", placeholder="e.g., Cuttack, Odisha")
 destination = st.text_input("🗺️ What's your main destination?", placeholder="e.g., Uttarakhand")
 places_to_visit = st.text_area("📍What places do you want to visit?", placeholder="e.g., Kedarnath, Badrinath, Rishikesh, Haridwar")
+stay_days = st.number_input("🕒 How many full days do you want to spend at the destination?", min_value=1, value=3)
 return_via = st.text_input("🔄 Any stop on return journey?", placeholder="e.g., Varanasi")
 budget = st.number_input("💰 What's your budget for the trip (in INR)?", min_value=1000, value=20000, step=1000)
 travel_mode = st.selectbox("🚄 Preferred mode of travel?", ["Train", "Flight", "Bus", "Cab", "Mixed"])
@@ -31,7 +32,7 @@ travel_mode = st.selectbox("🚄 Preferred mode of travel?", ["Train", "Flight",
 # --- LLM Config ---
 llm = ChatGroq(
     temperature=0,
-    groq_api_key= os.getenv("groq_api_key"),
+    groq_api_key=os.getenv("groq_api_key"),
     model_name="llama3-70b-8192"
 )
 prompt_template = get_prompt_template()
@@ -39,7 +40,7 @@ chain = prompt_template | llm
 
 # --- Generate Itinerary ---
 if st.button("🌍 Generate My Itinerary"):
-    if not all([home_location, destination, places_to_visit, budget, travel_mode]):
+    if not all([home_location, destination, places_to_visit, budget, travel_mode, stay_days]):
         st.warning("Please fill all required fields before generating the itinerary.")
     else:
         with st.spinner("Crafting your personalized itinerary..."):
@@ -49,12 +50,12 @@ if st.button("🌍 Generate My Itinerary"):
                 "places_to_visit": places_to_visit,
                 "return_via": return_via or "None",
                 "budget": budget,
-                "travel_mode": travel_mode
+                "travel_mode": travel_mode,
+                "stay_days": stay_days
             })
 
             st.markdown("## ✈️ Your Travel Itinerary")
-            
-            # Inject CSS styles for itinerary formatting
+
             st.markdown("""
                 <style>
                     .grid-container {
@@ -75,8 +76,7 @@ if st.button("🌍 Generate My Itinerary"):
                     }
                 </style>
             """, unsafe_allow_html=True)
-            
-            # Clean up the model response
+
             cleaned_response = response.content.replace("**", "").replace("—", "").replace("---", "").replace("\n\n", "\n")
 
             days = cleaned_response.split("## ")
@@ -89,4 +89,3 @@ if st.button("🌍 Generate My Itinerary"):
                             <p style="color:#e5e7eb; line-height:1.8;">{"<br>".join(day.splitlines()[1:])}</p>
                         </div>
                     """, unsafe_allow_html=True)
-
